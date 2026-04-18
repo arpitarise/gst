@@ -1,1 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataProcessor Pro | GST Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="icon">📊</span>
+                <span class="text">DataProcessor</span>
+            </div>
+            <nav>
+                <div class="nav-item active">Dashboard</div>
+                <div class="nav-item">History</div>
+                <div class="nav-item">Settings</div>
+            </nav>
+        </aside>
 
+        <!-- Main Content -->
+        <main class="main-content">
+            <header>
+                <h1>Data Management Console</h1>
+                <p>Upload Excel or JSON files to begin processing.</p>
+            </header>
+
+            <!-- Upload Section -->
+            <section class="upload-section">
+                <div id="drop-zone" class="drop-zone">
+                    <div class="drop-zone-content">
+                        <span class="upload-icon">📥</span>
+                        <p>Drag & drop files here or <span>browse</span></p>
+                        <input type="file" id="file-input" multiple accept=".xlsx, .json" hidden>
+                    </div>
+                </div>
+            </section>
+
+            <!-- File List Section -->
+            <section class="file-list-container">
+                <h3>Uploaded Files</h3>
+                <ul id="file-list" class="file-list">
+                    <li class="empty-msg">No files uploaded yet.</li>
+                </ul>
+            </section>
+
+            <!-- Action Toolbar -->
+            <section class="actions-grid">
+                <button class="btn btn-secondary" id="btn-clean">Clean Data</button>
+                <button class="btn btn-secondary" id="btn-map">Map Columns</button>
+                <button class="btn btn-secondary" id="btn-validate">Validate</button>
+                <button class="btn btn-secondary" id="btn-reconcile">Reconcile</button>
+                <button class="btn btn-primary" id="btn-gst">Generate GST</button>
+                <button class="btn btn-outline" id="btn-export">Export JSON</button>
+            </section>
+
+            <!-- Status Logs -->
+            <footer class="status-bar">
+                <div id="status-log">System Ready</div>
+            </footer>
+        </main>
+    </div>
+    <script src="script.js" type="module"></script>
+</body>
+</html>
