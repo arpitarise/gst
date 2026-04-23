@@ -1,22 +1,18 @@
+
 <!DOCTYPE html>
 <html lang="en" class="bg-slate-50 text-slate-800 font-sans antialiased">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GST Master Suite | Pro Analyzer & Recon</title>
-
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: { extend: { colors: { primary: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 900: '#1e3a8a' } } } }
         }
     </script>
-
-    <!-- External Libraries -->
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; }
@@ -33,14 +29,10 @@
     </style>
 </head>
 <body class="flex h-screen overflow-hidden selection:bg-blue-200">
-
-    <!-- LOADING OVERLAY -->
     <div id="loadingOverlay" class="fixed inset-0 bg-slate-900 bg-opacity-80 z-[100] flex flex-col items-center justify-center backdrop-blur-sm">
         <svg class="animate-spin h-14 w-14 text-blue-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
         <h2 class="text-white text-2xl font-bold tracking-wide" id="loadingText">Processing Data...</h2>
     </div>
-
-    <!-- SMART COLUMN MAPPING MODAL -->
     <div id="mappingModal" class="fixed inset-0 bg-slate-900 bg-opacity-75 z-[60] hidden flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl overflow-hidden flex flex-col max-h-full fade-in border border-slate-200">
             <div class="p-6 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
@@ -63,8 +55,6 @@
             </div>
         </div>
     </div>
-
-    <!-- INLINE EDIT MODAL -->
     <div id="editModal" class="fixed inset-0 bg-slate-900 bg-opacity-75 z-[60] hidden flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col fade-in">
             <div class="p-6 border-b border-slate-200 bg-slate-50">
@@ -108,8 +98,6 @@
             </div>
         </div>
     </div>
-
-    <!-- SIDEBAR -->
     <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col shadow-2xl z-20 shrink-0">
         <div class="h-20 flex items-center px-6 border-b border-slate-800 bg-primary-900">
             <svg class="w-8 h-8 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
@@ -136,34 +124,23 @@
         </nav>
         <div class="p-4 bg-slate-950 text-[10px] text-slate-500 uppercase tracking-widest text-center font-bold">100% Local Processing</div>
     </aside>
-
-    <!-- MAIN DASHBOARD AREA -->
     <main class="flex-1 flex flex-col relative w-full overflow-hidden">
         <header class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-10 shadow-sm shrink-0">
             <h2 id="header-title" class="text-2xl font-extrabold text-slate-800 tracking-tight">GSTR-1 Analyzer</h2>
         </header>
-
         <div class="flex-1 overflow-y-auto p-8">
-            
-            <!-- ===================================== -->
-            <!-- GSTR-1 ANALYZER MODULE                -->
-            <!-- ===================================== -->
             <div id="view-gstr1" class="view-section fade-in">
-                <!-- Upload -->
                 <div id="g1-upload-sec" class="mt-12 max-w-2xl mx-auto bg-white rounded-2xl shadow-lg border border-slate-200 p-12 text-center cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition-all group" onclick="document.getElementById('g1-file').click()">
                     <div class="w-20 h-20 mx-auto bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mb-6 group-hover:scale-110 transition-transform"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg></div>
                     <h2 class="text-3xl font-extrabold text-slate-800 mb-3">Upload GSTR-1 JSON</h2>
                     <p class="text-slate-500 font-medium">Click or Drop your Tally JSON export here</p>
                     <input type="file" id="g1-file" accept=".json" class="hidden" onchange="GSTR1.process(event)">
                 </div>
-
-                <!-- Dashboard -->
                 <div id="g1-dash-sec" class="hidden">
                     <div class="flex justify-end gap-4 mb-6">
                         <button onclick="GSTR1.exportCSV()" class="bg-white border border-slate-300 px-5 py-2.5 rounded-lg text-sm font-bold shadow-sm hover:bg-slate-50 transition">Export Full CSV</button>
                         <button onclick="location.reload()" class="bg-slate-800 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-md hover:bg-slate-900 transition">Reset Tool</button>
                     </div>
-
                     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-8">
                         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><p class="text-[10px] text-slate-500 font-black uppercase tracking-wider">Total Taxable</p><h3 class="text-xl font-black text-blue-600 mt-1" id="g1-val">₹0</h3></div>
                         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><p class="text-[10px] text-slate-500 font-black uppercase tracking-wider">Total Tax</p><h3 class="text-xl font-black text-red-500 mt-1" id="g1-tax">₹0</h3></div>
@@ -172,12 +149,10 @@
                         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><p class="text-[10px] text-slate-500 font-black uppercase tracking-wider">B2C Count</p><h3 class="text-xl font-black text-slate-800 mt-1" id="g1-b2c">0</h3></div>
                         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"><p class="text-[10px] text-slate-500 font-black uppercase tracking-wider">Cr/Dr Notes</p><h3 class="text-xl font-black text-slate-800 mt-1" id="g1-cdnr">0</h3></div>
                     </div>
-
                     <div class="border-b border-slate-200 mb-6 flex gap-4">
                         <button class="g1-tab tab-btn active px-4 py-3 text-sm transition" onclick="UI.switchTab('g1', 'summary')">Validation & Summary</button>
                         <button class="g1-tab tab-btn px-4 py-3 text-sm transition text-slate-500 hover:text-slate-800" onclick="UI.switchTab('g1', 'data')">B2B Line Details</button>
                     </div>
-
                     <div id="g1-tab-summary" class="g1-panel grid lg:grid-cols-2 gap-8">
                         <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                             <h2 class="text-lg font-extrabold text-slate-800 mb-4 border-b pb-3">Validation Report</h2>
@@ -189,7 +164,6 @@
                             <div class="h-48 mt-6"><canvas id="g1-chart"></canvas></div>
                         </div>
                     </div>
-
                     <div id="g1-tab-data" class="g1-panel hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                         <div class="p-4 border-b bg-slate-50"><input type="text" id="g1-search" placeholder="Search GSTIN or Invoice..." class="px-4 py-2 border rounded-lg w-72 text-sm outline-none focus:ring-2 focus:ring-blue-500 shadow-sm" onkeyup="GSTR1.renderB2B()"></div>
                         <div class="overflow-y-auto max-h-[500px]">
@@ -198,13 +172,8 @@
                     </div>
                 </div>
             </div>
-
-            <!-- ===================================== -->
-            <!-- 2B RECON MODULE - UPLOADS             -->
-            <!-- ===================================== -->
             <div id="view-recon-upload" class="view-section hidden fade-in max-w-5xl mx-auto mt-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-                    <!-- Books -->
                     <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-10 text-center cursor-pointer hover:border-blue-400 hover:shadow-xl transition-all" ondragover="event.preventDefault();" ondrop="Recon.handleDrop(event, 'pr')" onclick="document.getElementById('f-pr').click()">
                         <div class="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mb-5"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v13m0-13c-1.168-.777-2.754-1.253-4.5-1.253S4.168 5.223 3 6v13c1.168-.777 2.754-1.253 4.5-1.253s3.332.476 4.5 1.253m0-13c1.168-.777 2.754-1.253 4.5-1.253s3.332.476 4.5 1.253v13c-1.168-.777-2.754-1.253-4.5-1.253s-3.332.476-4.5 1.253"></path></svg></div>
                         <h3 class="font-extrabold text-xl mb-1">Purchase Register</h3>
@@ -212,7 +181,6 @@
                         <input type="file" id="f-pr" accept=".csv, .xlsx, .xls" class="hidden" onchange="Recon.processFile(event, 'pr')">
                         <div id="pr-status" class="mt-2 text-sm font-bold text-green-600 hidden bg-green-50 p-2 rounded"></div>
                     </div>
-                    <!-- Portal -->
                     <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-10 text-center cursor-pointer hover:border-indigo-400 hover:shadow-xl transition-all" ondragover="event.preventDefault();" ondrop="Recon.handleDrop(event, 'g2b')" onclick="document.getElementById('f-g2b').click()">
                         <div class="w-16 h-16 mx-auto bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mb-5"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg></div>
                         <h3 class="font-extrabold text-xl mb-1">GSTR-2B Portal</h3>
@@ -221,7 +189,6 @@
                         <div id="g2b-status" class="mt-2 text-sm font-bold text-green-600 hidden bg-green-50 p-2 rounded"></div>
                     </div>
                 </div>
-                
                 <div class="bg-white p-8 rounded-2xl border border-slate-200 mb-10 max-w-3xl mx-auto shadow-sm">
                     <h4 class="font-extrabold text-slate-800 mb-6 text-center text-lg">Reconciliation Engine Settings</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -238,15 +205,10 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="text-center">
                     <button id="btn-run" onclick="Recon.runEngine()" disabled class="bg-slate-800 hover:bg-slate-900 disabled:bg-slate-300 disabled:cursor-not-allowed text-white px-12 py-4 rounded-xl font-black text-lg shadow-2xl transition-all transform hover:-translate-y-1">🚀 Ignite Reconciliation</button>
                 </div>
             </div>
-
-            <!-- ===================================== -->
-            <!-- 2B RECON MODULE - DASHBOARD           -->
-            <!-- ===================================== -->
             <div id="view-recon-dash" class="view-section hidden fade-in max-w-7xl mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 border-b-4 border-b-green-500 shadow-md"><h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Matched</h4><p class="text-3xl font-black text-slate-800 mt-2" id="dash-m-c">0</p><p class="text-sm text-green-600 font-bold mt-2 bg-green-50 inline-block px-2 py-1 rounded" id="dash-m-v">₹0 Safe</p></div>
@@ -256,14 +218,17 @@
                 </div>
                 <div class="bg-white p-8 rounded-2xl shadow-md border border-slate-200 max-w-md mx-auto"><canvas id="rec-chart"></canvas></div>
             </div>
-
-            <!-- ===================================== -->
-            <!-- 2B RECON MODULE - TABLE DETAILS       -->
-            <!-- ===================================== -->
             <div id="view-recon-table" class="view-section hidden fade-in">
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 mb-6 flex flex-wrap gap-4 items-center justify-between">
                     <div class="flex gap-4 flex-1">
-                        <select id="rec-flt" class="border border-slate-300 rounded-lg px-4 py-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500" onchange="Recon.renderTable()"><option value="ALL">All Statuses</option><option value="MATCHED">Matched</option><option value="MISMATCH">Mismatch</option><option value="MISSING_IN_2B">Missing in 2B</option><option value="MISSING_IN_PR">Missing in Books</option></select>
+                        <select id="rec-flt" class="border border-slate-300 rounded-lg px-4 py-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500" onchange="Recon.renderTable()">
+                            <option value="ALL">All Statuses</option>
+                            <option value="MATCHED">Matched</option>
+                            <option value="AUTO_CORRECTED">Auto-Corrected</option>
+                            <option value="MISMATCH">Mismatch</option>
+                            <option value="MISSING_IN_2B">Missing in 2B</option>
+                            <option value="MISSING_IN_PR">Missing in Books</option>
+                        </select>
                         <input type="text" id="rec-src" placeholder="Search GSTIN, Party Name, or Invoice..." class="flex-1 max-w-md border border-slate-300 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500 shadow-inner" onkeyup="Recon.renderTable()">
                     </div>
                     <button onclick="Recon.exportExcel()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-lg text-sm font-bold shadow-md transition-all flex items-center gap-2">
@@ -291,10 +256,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- ===================================== -->
-            <!-- 2B RECON MODULE - VENDORS             -->
-            <!-- ===================================== -->
             <div id="view-recon-vendor" class="view-section hidden fade-in max-w-6xl mx-auto">
                 <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
                     <div class="max-h-[650px] overflow-y-auto">
@@ -313,13 +274,9 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </main>
-
-    <!-- JS LOGIC -->
     <script>
-        // --- GLOBAL UTILITIES ---
         const Utils = {
             curr: (v) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(v || 0),
             clean: (v) => isNaN(parseFloat(String(v).replace(/[^0-9.-]/g,''))) ? 0 : parseFloat(String(v).replace(/[^0-9.-]/g,'')),
@@ -350,10 +307,46 @@
                 s = s.replace(/^0+/, '');
                 s = s.replace(/[^A-Z0-9]/g, '');
                 return s;
+            },
+            normalizeInvoice: (inv) => {
+                if (!inv) return '';
+                let str = String(inv).trim();
+                let parts = str.split('/');
+                let isYearRange = (p) => /^\d{4}-\d{2}$/.test(p.trim()) || /^\d{2}-\d{2}$/.test(p.trim());
+                let meaningful = parts.filter(p => !isYearRange(p));
+                let numericParts = meaningful.filter(p => /^\d+$/.test(p.trim()));
+                if (numericParts.length > 0) return String(parseInt(numericParts[numericParts.length - 1], 10));
+                return str.toLowerCase().replace(/[^a-z0-9]/g, '');
+            },
+            parseDate: (dateStr) => {
+                if (!dateStr) return null;
+                let parts = dateStr.split('-');
+                if (parts.length !== 3) return null;
+                let[d, m, y] = parts.map(Number);
+                if (isNaN(d) || isNaN(m) || isNaN(y)) return null;
+                return new Date(y, m - 1, d);
+            },
+            daysDiff: (dateA, dateB) => {
+                if (!dateA || !dateB) return 9999;
+                return Math.abs((dateA - dateB) / (1000 * 60 * 60 * 24));
+            },
+            amountClose: (a, b, tol) => {
+                let absDiff = Math.abs(a - b);
+                let relDiff = absDiff / Math.max(Math.abs(a), Math.abs(b), 1);
+                return absDiff <= tol || relDiff <= 0.005;
+            },
+            levenshtein: (s1, s2) => {
+                let m = s1.length, n = s2.length;
+                let dp = Array.from({ length: m + 1 }, (_, i) => Array.from({ length: n + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0)));
+                for (let i = 1; i <= m; i++) {
+                    for (let j = 1; j <= n; j++) {
+                        if (s1[i - 1] === s2[j - 1]) dp[i][j] = dp[i - 1][j - 1];
+                        else dp[i][j] = 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+                    }
+                }
+                return dp[m][n];
             }
         };
-
-        // --- UI ROUTER ---
         const UI = {
             switchView: (vid) => {
                 document.querySelectorAll('.view-section').forEach(e => e.classList.add('hidden'));
@@ -372,12 +365,8 @@
                 document.getElementById(`${pfx}-tab-${tab}`).classList.remove('hidden');
             }
         };
-
-        // ==========================================
-        // MODULE 1: GSTR-1 ANALYZER 
-        // ==========================================
         const GSTR1 = {
-            raw: null, b2b: [], chart: null,
+            raw: null, b2b:[], chart: null,
             process: (e) => {
                 let f = e.target.files[0]; if(!f || !f.name.endsWith('.json')) return alert("Upload JSON only");
                 Utils.load("Parsing GSTR-1...");
@@ -407,18 +396,15 @@
                 (GSTR1.raw.b2cs||[]).forEach(i => { b2c++; addT(i.rt, Utils.clean(i.txval), Utils.clean(i.iamt)+Utils.clean(i.camt)+Utils.clean(i.samt)); });
                 (GSTR1.raw.cdnr||[]).forEach(x => cdnr+=(x.nt||[]).length);
                 (GSTR1.raw.cdnur||[]).forEach(x => cdnr+=(x.nt||[]).length);
-
                 document.getElementById('g1-val').innerText = Utils.curr(tTx); document.getElementById('g1-tax').innerText = Utils.curr(tTax);
-                document.getElementById('g1-inv').innerText = [...new Set(GSTR1.b2b.map(x=>x.i))].length + b2c;
-                document.getElementById('g1-b2b').innerText = [...new Set(GSTR1.b2b.map(x=>x.i))].length;
+                document.getElementById('g1-inv').innerText =[...new Set(GSTR1.b2b.map(x=>x.i))].length + b2c;
+                document.getElementById('g1-b2b').innerText =[...new Set(GSTR1.b2b.map(x=>x.i))].length;
                 document.getElementById('g1-b2c').innerText = b2c; document.getElementById('g1-cdnr').innerText = cdnr;
                 document.getElementById('g1-log').innerHTML = logs.length ? logs.map(l=>`<div class="text-sm bg-red-50 text-red-900 border border-red-100 p-2.5 rounded-lg">${l}</div>`).join('') : '<div class="text-green-600 font-bold p-3 bg-green-50 rounded-lg">✅ Structural Validation Passed Perfectly.</div>';
-
                 let lbl=[], val=[]; document.getElementById('g1-tax-tbl').innerHTML='';
                 for(let k in tr) { if(tr[k].v>0) { lbl.push(k+'%'); val.push(tr[k].v); document.getElementById('g1-tax-tbl').innerHTML += `<tr><td class="p-3 text-left font-bold text-slate-700">${k}%</td><td class="p-3">${tr[k].v.toFixed(2)}</td><td class="p-3">${tr[k].t.toFixed(2)}</td></tr>`; } }
                 if(GSTR1.chart) GSTR1.chart.destroy();
                 GSTR1.chart = new Chart(document.getElementById('g1-chart'), { type:'bar', data: { labels:lbl, datasets:[{label:'Taxable', data:val, backgroundColor:'#3b82f6', borderRadius:4}] }});
-
                 GSTR1.renderB2B(); document.getElementById('g1-upload-sec').classList.add('hidden'); document.getElementById('g1-dash-sec').classList.remove('hidden'); Utils.stopLoad();
             },
             renderB2B: () => {
@@ -427,32 +413,25 @@
                 document.getElementById('g1-b2b-tbody').innerHTML = d.map(x=>`<tr class="hover:bg-slate-50 transition"><td class="p-4 text-left font-mono text-xs">${x.g}</td><td class="p-4 text-left font-bold">${x.i}</td><td class="p-4 text-left">${x.dt}</td><td class="p-4 font-bold text-blue-600">${x.tx.toFixed(2)}</td><td class="p-4">${x.rt}%</td><td class="p-4">${x.ig.toFixed(2)}</td><td class="p-4">${x.cg.toFixed(2)}</td><td class="p-4">${x.sg.toFixed(2)}</td></tr>`).join('');
             },
             exportCSV: () => {
-                let c = "GSTIN,Invoice,Date,Taxable,Rate,IGST,CGST,SGST\n" + GSTR1.b2b.map(x => [x.g, x.i, x.dt, x.tx, x.rt, x.ig, x.cg, x.sg].map(Utils.escapeCSV).join(',')).join("\n");
+                let c = "GSTIN,Invoice,Date,Taxable,Rate,IGST,CGST,SGST\n" + GSTR1.b2b.map(x =>[x.g, x.i, x.dt, x.tx, x.rt, x.ig, x.cg, x.sg].map(Utils.escapeCSV).join(',')).join("\n");
                 let a = document.createElement('a'); a.href="data:text/csv;charset=utf-8,"+encodeURI(c); a.download="GSTR1_Export.csv"; a.click();
             }
         };
-
-        // ==========================================
-        // MODULE 2: ITC RECONCILIATION ENGINE (PRO)
-        // ==========================================
         const Recon = {
             data: { pr:[], g2b:[], out:[], ven:[] },
             tempState: null,
-            
-            fields: [
-                { id: 'gstin', label: 'Supplier GSTIN', keys: ['gstin','uin'] },
-                { id: 'party', label: 'Party/Legal Name', keys: ['party','name','supplier','trade','particulars'] },
+            fields:[
+                { id: 'gstin', label: 'Supplier GSTIN', keys:['gstin','uin'] },
+                { id: 'party', label: 'Party/Legal Name', keys:['party','name','supplier','trade','particulars'] },
                 { id: 'inv', label: 'Invoice Number', keys: ['invoice','voucherno','documentnumber','vch'] },
                 { id: 'date', label: 'Invoice Date', keys: ['date'] },
                 { id: 'taxable', label: 'Taxable Value', keys: ['taxable','assessable','value','purchase'] },
                 { id: 'igst', label: 'IGST Amount', keys: ['integrated','igst'] },
-                { id: 'cgst', label: 'CGST Amount', keys: ['central','cgst'] },
-                { id: 'sgst', label: 'SGST Amount', keys: ['state','sgst','utgst'] }
+                { id: 'cgst', label: 'CGST Amount', keys:['central','cgst'] },
+                { id: 'sgst', label: 'SGST Amount', keys:['state','sgst','utgst'] }
             ],
-
             handleDrop: (e, t) => { e.preventDefault(); if(e.dataTransfer.files.length) Recon.extract(e.dataTransfer.files[0], t); },
             processFile: (e, t) => { if(e.target.files.length) Recon.extract(e.target.files[0], t); },
-
             extract: (f, type) => {
                 Utils.load(`Parsing ${type==='pr'?'Books':'Portal'} Data...`);
                 let r = new FileReader();
@@ -462,11 +441,9 @@
                     Recon.initMapping(rows, type, f.name);
                 }; r.readAsArrayBuffer(f);
             },
-
             initMapping: (rows, type, filename) => {
                 let hIdx = rows.findIndex(r => r.some(c => String(c).toLowerCase().replace(/\s/g,'').includes('gstin')));
                 if(hIdx === -1) hIdx = 0;
-
                 Recon.tempState = { rows, type, hIdx, file: filename };
                 let hrSelect = document.getElementById('map-header-row'); hrSelect.innerHTML = '';
                 for(let i=0; i<Math.min(20, rows.length); i++) {
@@ -477,19 +454,14 @@
                 Recon.renderColumnSelectors(hIdx);
                 Utils.stopLoad(); document.getElementById('mappingModal').classList.remove('hidden');
             },
-
             changeHeaderRow: (idx) => { Recon.tempState.hIdx = parseInt(idx); Recon.renderColumnSelectors(parseInt(idx)); },
-
             renderColumnSelectors: (hIdx) => {
                 let rows = Recon.tempState.rows;
                 let isSplit = rows[hIdx+1] && rows[hIdx+1].some(c => String(c).toLowerCase().replace(/\s/g,'').includes('invoicenumber'));
                 let headers = rows[hIdx].map((h, i) => { let s = String(h||'').trim(); if(isSplit && rows[hIdx+1][i]) s += " - " + String(rows[hIdx+1][i]).trim(); return s; });
-
                 Recon.tempState.headers = headers; Recon.tempState.dataStartRow = isSplit ? hIdx + 2 : hIdx + 1;
                 let container = document.getElementById('map-fields-container'); container.innerHTML = '';
-
                 const findLastMatch = (keys) => { for(let i = headers.length-1; i>=0; i--) { let cln = headers[i].toLowerCase().replace(/[^a-z]/g, ''); if(keys.some(k => cln.includes(k))) return i; } return -1; };
-
                 Recon.fields.forEach(f => {
                     let defaultIdx = findLastMatch(f.keys);
                     let opts = `<option value="-1">-- Leave Blank / Not Available --</option>`;
@@ -497,19 +469,15 @@
                     container.innerHTML += `<div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm"><label class="block text-xs font-black text-slate-500 uppercase mb-2">${f.label}</label><select id="map_${f.id}" class="w-full border border-slate-300 bg-slate-50 rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500 font-medium">${opts}</select></div>`;
                 });
             },
-
             cancelMapping: () => { document.getElementById(`f-${Recon.tempState.type}`).value = ''; Recon.tempState = null; document.getElementById('mappingModal').classList.add('hidden'); },
-
             confirmMapping: () => {
                 let s = Recon.tempState, map = {}, hasError = false;
                 Recon.fields.forEach(f => { let val = parseInt(document.getElementById(`map_${f.id}`).value); if(val === -1 && ['taxable'].includes(f.id)) hasError = true; map[f.id] = val; });
                 if(hasError) return alert("Please ensure Taxable Value column is selected.");
-
                 document.getElementById('mappingModal').classList.add('hidden');
                 Utils.load(`Extracting ${s.type.toUpperCase()} data...`);
-
                 setTimeout(() => {
-                    let arr = [];
+                    let arr =[];
                     for(let i = s.dataStartRow; i < s.rows.length; i++) {
                         let r = s.rows[i];
                         let gstin = map.gstin !== -1 ? String(r[map.gstin]||'').trim().toUpperCase() : '';
@@ -519,180 +487,228 @@
                         let cg = map.cgst !== -1 ? Utils.clean(r[map.cgst]) : 0;
                         let sg = map.sgst !== -1 ? Utils.clean(r[map.sgst]) : 0;
                         let t = ig + cg + sg;
-
-                        // DO NOT REMOVE ENTRIES: Only skip if completely blank row
                         if(!gstin && !inv && tx === 0 && t === 0) continue; 
-
-                        // Flag missing identifiers so they don't group falsely but are kept
                         if(!gstin) gstin = "NO_GSTIN_FOUND";
                         if(!inv) inv = "NO_INV_" + i;
-
                         arr.push({
                             g: gstin, p: map.party !== -1 ? String(r[map.party]||'').trim() : 'Unknown',
                             i: inv, d: map.date !== -1 ? Utils.normDate(r[map.date]) : '',
                             tx, ig, cg, sg, t
                         });
                     }
-
                     Recon.data[s.type] = arr;
                     let el = document.getElementById(`${s.type}-status`);
                     el.innerText = `✅ Loaded & Mapped: ${arr.length} records`; el.classList.remove('hidden');
                     Recon.tempState = null; Utils.stopLoad();
-                    
                     if(Recon.data.pr.length && Recon.data.g2b.length) {
                         let btn = document.getElementById('btn-run'); btn.disabled = false;
                         btn.classList.add('animate-pulse'); setTimeout(()=>btn.classList.remove('animate-pulse'), 2000);
                     }
                 }, 100);
             },
-
             agg: (arr, fuz) => {
-                let m = new Map(), dups=0;
+                let m = new Map();
                 arr.forEach(x => {
-                    // Apply Advanced Normalization Engine
                     let cI = Utils.normInv(x.i, fuz);
                     let k = `${x.g}_${cI}`;
-                    
                     if(m.has(k)) { 
-                        dups++; let e=m.get(k); 
+                        let e=m.get(k); 
                         e.tx+=x.tx; e.ig+=x.ig; e.cg+=x.cg; e.sg+=x.sg; e.t+=x.t; 
                     } else { 
-                        m.set(k, {...x, cI}); 
+                        m.set(k, {...x, cI, uid: 'u_' + Math.random().toString(36).substr(2, 9)}); 
                     }
                 });
-                if(dups>0) console.warn(`${dups} duplicates merged.`);
                 return Array.from(m.values());
             },
-
+            createMatchRecord: (p, g, tol, forceIssues) => {
+                let issues = forceIssues ?[...forceIssues] :[];
+                let st = 'MISMATCH';
+                let dtx = p.tx - g.tx;
+                let dt = p.t - g.t;
+                if (Math.abs(dtx) <= tol && Math.abs(dt) <= tol) {
+                    if (!forceIssues) {
+                        if (p.i !== g.i) issues.push(`Invoice: ${p.i} → ${g.i}`);
+                        if (p.d !== g.d) issues.push(`Date: ${p.d} → ${g.d}`);
+                    }
+                    if (issues.length > 0) {
+                        st = 'AUTO_CORRECTED';
+                    } else {
+                        st = 'MATCHED';
+                    }
+                } else {
+                    issues.push(`Amount Diff: Taxable (${dtx.toFixed(2)}), Tax (${dt.toFixed(2)})`);
+                }
+                Recon.data.out.push({
+                    uid: 'row_' + Math.random().toString(36).substr(2, 9), marked: false,
+                    st: st, g: p.g, p: p.p, i: p.i, d: p.d, gi: g.i, gd: g.d,
+                    ptx: p.tx, pig: p.ig, pcg: p.cg, psg: p.sg, pt: p.t,
+                    gtx: g.tx, gig: g.ig, gcg: g.cg, gsg: g.sg, gt: g.t,
+                    dtx: dtx, dt: dt, issues: issues
+                });
+            },
+            createMissingRecord: (obj, st) => {
+                let isPR = st === 'MISSING_IN_2B';
+                Recon.data.out.push({
+                    uid: 'row_' + Math.random().toString(36).substr(2, 9), marked: false,
+                    st: st, g: obj.g, p: obj.p, i: obj.i, d: obj.d, gi: '', gd: '',
+                    ptx: isPR ? obj.tx : 0, pig: isPR ? obj.ig : 0, pcg: isPR ? obj.cg : 0, psg: isPR ? obj.sg : 0, pt: isPR ? obj.t : 0,
+                    gtx: isPR ? 0 : obj.tx, gig: isPR ? 0 : obj.ig, gcg: isPR ? 0 : obj.cg, gsg: isPR ? 0 : obj.sg, gt: isPR ? 0 : obj.t,
+                    dtx: isPR ? obj.tx : -obj.tx, dt: isPR ? obj.t : -obj.t, issues:[]
+                });
+            },
             runEngine: () => {
                 Utils.load("Running Core Reconciliation...");
                 setTimeout(() => {
                     let tol = parseFloat(document.getElementById('rec-tol').value||0);
                     let fuz = document.getElementById('rec-fuz').checked;
-                    
                     let prList = Recon.agg(Recon.data.pr, fuz);
                     let g2bList = Recon.agg(Recon.data.g2b, fuz);
-                    
-                    Recon.data.out = []; 
-                    let vs = {};
-                    const gV = (g, name) => { if(!vs[g]) vs[g] = {g, p:name, tc:0, mc:0, mr:0, ls:0}; return vs[g]; };
-
-                    // Hash map for fast O(1) exact matches
+                    Recon.data.out =[];
+                    let g2bUnmatched = new Set(g2bList);
+                    let prUnmatched = new Set(prList);
                     let g2bMap = new Map();
-                    g2bList.forEach(g => g2bMap.set(`${g.g}_${g.cI}`, g));
-
+                    g2bList.forEach(g => {
+                        let key = `${g.g}_${g.cI}`;
+                        if (!g2bMap.has(key)) g2bMap.set(key,[]);
+                        g2bMap.get(key).push(g);
+                    });
                     prList.forEach(p => {
-                        let matchedG = g2bMap.get(`${p.g}_${p.cI}`);
-
-                        // ADVANCED FUZZY MATCHING LOGIC (Prefix/Suffix/Leading Zero ignore)
-                        if (!matchedG && fuz && p.g !== "NO_GSTIN_FOUND") {
-                            let pNum = p.cI.replace(/[^0-9]/g, ''); 
-                            let potentialMatches = g2bList.filter(g => g.g === p.g && !g.matched);
-                            
-                            for (let g of potentialMatches) {
-                                let gNum = g.cI.replace(/[^0-9]/g, '');
-                                let isFuzzy = false;
-
-                                if (pNum && gNum && pNum === gNum) { isFuzzy = true; }
-                                else if (p.cI.length > 2 && g.cI.length > 2) {
-                                    if (p.cI.endsWith(g.cI) || g.cI.endsWith(p.cI)) isFuzzy = true;
-                                    else if (p.cI.includes(g.cI) || g.cI.includes(p.cI)) {
-                                        let shorter = p.cI.length < g.cI.length ? p.cI : g.cI;
-                                        if (/^[0-9]+$/.test(shorter) && shorter.length >= 3) isFuzzy = true;
+                        let key = `${p.g}_${p.cI}`;
+                        let possibleMatches = g2bMap.get(key) ||[];
+                        let matchedG = null;
+                        if (possibleMatches.length > 0) {
+                            matchedG = possibleMatches.find(g => g2bUnmatched.has(g) && Utils.amountClose(p.tx, g.tx, tol));
+                            if (!matchedG) matchedG = possibleMatches.find(g => g2bUnmatched.has(g));
+                        }
+                        if (matchedG) {
+                            g2bUnmatched.delete(matchedG);
+                            prUnmatched.delete(p);
+                            Recon.createMatchRecord(p, matchedG, tol, null);
+                        }
+                    });
+                    let remainingPR = Array.from(prUnmatched);
+                    remainingPR.forEach(p => {
+                        if (p.g === "NO_GSTIN_FOUND") return;
+                        let candidates = Array.from(g2bUnmatched).filter(g => g.g === p.g && Utils.amountClose(p.tx, g.tx, tol));
+                        if (candidates.length > 0) {
+                            let bestMatch = null;
+                            let bestScore = -1;
+                            let bestIssues =[];
+                            candidates.forEach(g => {
+                                let score = 50;
+                                let issues =[];
+                                if (Utils.amountClose(p.t, g.t, tol)) {
+                                    score += 20;
+                                } else {
+                                    issues.push(`Tax diff: ${p.t} vs ${g.t}`);
+                                }
+                                let normPR = Utils.normalizeInvoice(p.i);
+                                let norm2B = Utils.normalizeInvoice(g.i);
+                                if (normPR === norm2B) {
+                                    score += 25;
+                                    issues.push(`Invoice format: ${p.i} → ${g.i}`);
+                                } else {
+                                    let ed = Utils.levenshtein(normPR, norm2B);
+                                    if (ed <= 2) {
+                                        score += 12;
+                                        issues.push(`Invoice typo: ${p.i} → ${g.i}`);
+                                    } else if (p.i.includes(g.i) || g.i.includes(p.i)) {
+                                        score += 10;
+                                        issues.push(`Invoice partial: ${p.i} → ${g.i}`);
+                                    } else {
+                                        issues.push(`Invoice mismatch: ${p.i} vs ${g.i}`);
                                     }
                                 }
-
-                                if (isFuzzy) { matchedG = g; break; }
+                                let prDate = Utils.parseDate(p.d);
+                                let b2Date = Utils.parseDate(g.d);
+                                let dd = Utils.daysDiff(prDate, b2Date);
+                                if (dd === 0) {
+                                    score += 15;
+                                } else if (dd <= 7) {
+                                    score += 8;
+                                    issues.push(`Date: ${p.d} → ${g.d}`);
+                                } else if (dd <= 31) {
+                                    score += 3;
+                                    issues.push(`Date: ${p.d} → ${g.d}`);
+                                } else {
+                                    issues.push(`Date mismatch: ${p.d} vs ${g.d}`);
+                                }
+                                if (score > bestScore && score >= 70) {
+                                    bestScore = score;
+                                    bestMatch = g;
+                                    bestIssues = issues;
+                                }
+                            });
+                            if (bestMatch) {
+                                g2bUnmatched.delete(bestMatch);
+                                prUnmatched.delete(p);
+                                bestIssues.push("Matched by amount signature (GSTIN + Taxable identical)");
+                                Recon.createMatchRecord(p, bestMatch, tol, bestIssues);
                             }
                         }
-
-                        let st = 'MISSING_IN_2B', dt = p.t;
-                        if (matchedG) {
-                            matchedG.matched = true;
-                            g2bMap.delete(`${matchedG.g}_${matchedG.cI}`); 
-                            dt = p.t - matchedG.t; 
-                            st = (Math.abs(dt) <= tol && Math.abs(p.tx - matchedG.tx) <= tol) ? 'MATCHED' : 'MISMATCH';
-                        }
-                        
-                        Recon.data.out.push({
-                            uid: 'row_' + Math.random().toString(36).substr(2, 9), marked: false,
-                            st, g: p.g, p: p.p, i: p.i, d: p.d,
-                            ptx: p.tx, pig: p.ig, pcg: p.cg, psg: p.sg, pt: p.t,
-                            gtx: matchedG ? matchedG.tx : 0, gig: matchedG ? matchedG.ig : 0, gcg: matchedG ? matchedG.cg : 0, gsg: matchedG ? matchedG.sg : 0, gt:  matchedG ? matchedG.t : 0,
-                            dtx: p.tx - (matchedG ? matchedG.tx : 0), dt: dt
-                        });
                     });
-
-                    // Remaining Portal items
-                    g2bList.forEach(g => {
-                        if (!g.matched) {
-                            Recon.data.out.push({
-                                uid: 'row_' + Math.random().toString(36).substr(2, 9), marked: false,
-                                st: 'MISSING_IN_PR', g: g.g, p: g.p, i: g.i, d: g.d,
-                                ptx: 0, pig: 0, pcg: 0, psg: 0, pt: 0,
-                                gtx: g.tx, gig: g.ig, gcg: g.cg, gsg: g.sg, gt: g.t,
-                                dtx: -g.tx, dt: -g.t
-                            });
-                        }
+                    prUnmatched.forEach(p => {
+                        Recon.createMissingRecord(p, 'MISSING_IN_2B');
                     });
-
+                    g2bUnmatched.forEach(g => {
+                        Recon.createMissingRecord(g, 'MISSING_IN_PR');
+                    });
                     Recon.recalcDashAndVendor();
                     ['recon-dash','recon-table','recon-vendor'].forEach(id=>document.getElementById('nav-'+id).classList.remove('hidden'));
-                    
                     Recon.renderTable(); Recon.rVen();
                     Utils.stopLoad(); UI.switchView('recon-dash');
                 }, 100);
             },
-
-            // New centralized calculation engine to support real-time edits
             recalcDashAndVendor: () => {
                 let m=0, mm=0, m2b=0, mpr=0, sf=0, df=0, rs=0, un=0;
                 let vs = {}; const gV = (g, name) => { if(!vs[g]) vs[g] = {g, p:name, tc:0, mc:0, mr:0, ls:0}; return vs[g]; };
-
-                let w = {'MISMATCH':1,'MISSING_IN_2B':2,'MISSING_IN_PR':3,'MATCHED':4};
+                let w = {'MISMATCH':1,'MISSING_IN_2B':2,'MISSING_IN_PR':3,'AUTO_CORRECTED':4,'MATCHED':5};
                 Recon.data.out.sort((a,b) => w[a.st] - w[b.st]);
-
                 Recon.data.out.forEach(x => {
-                    if(x.st==='MATCHED'){ m++; sf+=x.gt; } if(x.st==='MISMATCH'){ mm++; df+=x.dt; }
+                    if(x.st==='MATCHED' || x.st==='AUTO_CORRECTED'){ m++; sf+=x.gt; } if(x.st==='MISMATCH'){ mm++; df+=x.dt; }
                     if(x.st==='MISSING_IN_2B'){ m2b++; rs+=x.pt; } if(x.st==='MISSING_IN_PR'){ mpr++; un+=x.gt; }
-                    
                     let v = gV(x.g, x.p); v.tc++; 
-                    if(x.st==='MATCHED') v.mc++; 
+                    if(x.st==='MATCHED' || x.st==='AUTO_CORRECTED') v.mc++; 
                     if(x.st==='MISSING_IN_2B'){ v.mr++; v.ls+=x.pt; }
                 });
-
                 Recon.data.ven = Object.values(vs).sort((a,b) => b.ls - a.ls);
-
                 document.getElementById('dash-m-c').innerText=m; document.getElementById('dash-m-v').innerText=Utils.curr(sf)+' Safe';
                 document.getElementById('dash-mm-c').innerText=mm; document.getElementById('dash-mm-v').innerText=Utils.curr(df)+' Diff';
                 document.getElementById('dash-m2b-c').innerText=m2b; document.getElementById('dash-m2b-v').innerText=Utils.curr(rs)+' At Risk';
                 document.getElementById('dash-mpr-c').innerText=mpr; document.getElementById('dash-mpr-v').innerText=Utils.curr(un)+' Unclaimed';
-
                 if(window.rc) window.rc.destroy();
-                window.rc = new Chart(document.getElementById('rec-chart'), { type:'doughnut', data:{ labels:['Match','Mismatch','Miss 2B','Miss Books'], datasets:[{data:[m,mm,m2b,mpr], backgroundColor:['#22c55e','#eab308','#ef4444','#3b82f6'], borderWidth:0}] }, options:{cutout:'75%', plugins:{legend:{position:'bottom'}}} });
+                window.rc = new Chart(document.getElementById('rec-chart'), { type:'doughnut', data:{ labels:['Match/Auto','Mismatch','Miss 2B','Miss Books'], datasets:[{data:[m,mm,m2b,mpr], backgroundColor:['#22c55e','#eab308','#ef4444','#3b82f6'], borderWidth:0}] }, options:{cutout:'75%', plugins:{legend:{position:'bottom'}}} });
             },
-
             renderTable: () => {
                 let f = document.getElementById('rec-flt').value, q = document.getElementById('rec-src').value.toLowerCase();
                 let d = Recon.data.out.filter(x => (f==='ALL'||x.st===f) && (x.g.toLowerCase().includes(q) || x.i.toLowerCase().includes(q) || x.p.toLowerCase().includes(q))).slice(0,800);
-                const bg = {'MATCHED':'bg-green-100 text-green-800 border-green-200','MISMATCH':'bg-yellow-100 text-yellow-800 border-yellow-200','MISSING_IN_2B':'bg-red-100 text-red-800 border-red-200','MISSING_IN_PR':'bg-blue-100 text-blue-800 border-blue-200'};
-                
-                document.getElementById('rec-tbody').innerHTML = d.map(x=>`
+                const bg = {'MATCHED':'bg-green-100 text-green-800 border-green-200','AUTO_CORRECTED':'bg-purple-100 text-purple-800 border-purple-200','MISMATCH':'bg-yellow-100 text-yellow-800 border-yellow-200','MISSING_IN_2B':'bg-red-100 text-red-800 border-red-200','MISSING_IN_PR':'bg-blue-100 text-blue-800 border-blue-200'};
+                document.getElementById('rec-tbody').innerHTML = d.map(x=>{
+                    const stLabel = x.st === 'AUTO_CORRECTED' ? 'AUTO-CORRECTED' : x.st;
+                    let issueHtml = x.issues && x.issues.length ? `<div class="mt-1.5 space-y-1">${x.issues.map(i=>`<div class="text-[10px] text-purple-700 bg-purple-50 border border-purple-100 px-2 py-0.5 rounded font-bold leading-tight inline-block mr-1 mb-1">${i}</div>`).join('')}</div>` : '';
+                    let invHtml = `<span class="font-bold block text-slate-700 ${x.i.includes('NO_INV')?'text-red-500':''}">${x.i}</span>`;
+                    if (x.gi && x.gi !== x.i) {
+                        invHtml = `<span class="font-bold block text-slate-700">${x.i} <span class="text-purple-500 text-[10px]">→ ${x.gi}</span></span>`;
+                    }
+                    let dtHtml = `<span class="text-xs text-slate-500 font-medium">${x.d}</span>`;
+                    if (x.gd && x.gd !== x.d) {
+                        dtHtml = `<span class="text-xs text-slate-500 font-medium">${x.d} <span class="text-purple-500 text-[10px]">→ ${x.gd}</span></span>`;
+                    }
+                    return `
                     <tr class="border-b border-slate-100 hover:bg-slate-50 transition ${x.marked ? 'row-marked' : ''}">
-                        <td class="p-4 text-center"><span class="px-3 py-1 rounded text-[10px] font-black border ${bg[x.st]}">${x.st}</span></td>
-                        <td class="p-4 text-left leading-tight"><span class="font-mono text-xs text-slate-500 block ${x.g.includes('NO_')?'text-red-500 font-bold':''}">${x.g}</span><span class="font-bold text-slate-800 truncate max-w-[200px] inline-block" title="${x.p}">${x.p}</span></td>
-                        <td class="p-4 text-left leading-tight"><span class="font-bold block text-slate-700 ${x.i.includes('NO_INV')?'text-red-500':''}">${x.i}</span><span class="text-xs text-slate-500 font-medium">${x.d}</span></td>
-                        <td class="p-4 font-bold text-blue-600 bg-blue-50/30">${x.ptx.toFixed(2)}</td><td class="p-4 font-bold text-indigo-600 bg-indigo-50/30">${x.gtx.toFixed(2)}</td>
-                        <td class="p-4 font-bold text-blue-600 bg-blue-50/30">${x.pt.toFixed(2)}</td><td class="p-4 font-bold text-indigo-600 bg-indigo-50/30">${x.gt.toFixed(2)}</td>
-                        <td class="p-4 font-black ${Math.abs(x.dt)>5?'text-red-600':''}">${x.dt.toFixed(2)}</td>
+                        <td class="p-4 text-center align-top"><span class="px-3 py-1 rounded text-[10px] font-black border ${bg[x.st]}">${stLabel}</span></td>
+                        <td class="p-4 text-left leading-tight align-top"><span class="font-mono text-xs text-slate-500 block ${x.g.includes('NO_')?'text-red-500 font-bold':''}">${x.g}</span><span class="font-bold text-slate-800 truncate max-w-[200px] inline-block" title="${x.p}">${x.p}</span>${issueHtml}</td>
+                        <td class="p-4 text-left leading-tight align-top">${invHtml}${dtHtml}</td>
+                        <td class="p-4 font-bold text-blue-600 bg-blue-50/30 align-top">${x.ptx.toFixed(2)}</td><td class="p-4 font-bold text-indigo-600 bg-indigo-50/30 align-top">${x.gtx.toFixed(2)}</td>
+                        <td class="p-4 font-bold text-blue-600 bg-blue-50/30 align-top">${x.pt.toFixed(2)}</td><td class="p-4 font-bold text-indigo-600 bg-indigo-50/30 align-top">${x.gt.toFixed(2)}</td>
+                        <td class="p-4 font-black align-top ${Math.abs(x.dt)>5?'text-red-600':''}">${x.dt.toFixed(2)}</td>
                         <td class="p-4 text-center flex gap-3 justify-center items-center h-full mt-2">
                             <button onclick="Recon.toggleMark('${x.uid}')" class="transform hover:scale-125 transition ${x.marked ? 'text-purple-600' : 'text-slate-300 hover:text-purple-500'}" title="Pin/Mark row">📌</button>
                             <button onclick="Recon.editRow('${x.uid}')" class="transform hover:scale-125 transition text-blue-400 hover:text-blue-600" title="Edit values">✏️</button>
                             <button onclick="Recon.deleteRow('${x.uid}')" class="transform hover:scale-125 transition text-red-400 hover:text-red-600" title="Remove entry">🗑️</button>
                         </td>
-                    </tr>`).join('');
+                    </tr>`}).join('');
             },
-
             rVen: () => {
                 document.getElementById('rec-ven-tbody').innerHTML = Recon.data.ven.map(v=>`
                     <tr class="border-b border-slate-100 hover:bg-slate-50 transition">
@@ -703,8 +719,6 @@
                         <td class="p-5 text-right font-black text-red-600 text-base">${Utils.curr(v.ls)}</td>
                     </tr>`).join('');
             },
-
-            // --- REAL-TIME EDITING LOGIC ---
             toggleMark: (uid) => {
                 let r = Recon.data.out.find(x => x.uid === uid); if(r) r.marked = !r.marked; Recon.renderTable();
             },
@@ -724,62 +738,48 @@
             saveRowEdit: () => {
                 let uid = document.getElementById('edit-uid').value; let r = Recon.data.out.find(x => x.uid === uid); if(!r) return;
                 let tol = parseFloat(document.getElementById('rec-tol').value||0);
-                
                 let nG = document.getElementById('edit-gstin').value.toUpperCase().trim();
                 let nI = document.getElementById('edit-inv').value.toUpperCase().trim();
                 let nP = document.getElementById('edit-party').value.trim();
-
                 let nPtx = Utils.clean(document.getElementById('edit-ptx').value);
                 let nGtx = Utils.clean(document.getElementById('edit-gtx').value);
                 let nPt = Utils.clean(document.getElementById('edit-pt').value);
                 let nGt = Utils.clean(document.getElementById('edit-gt').value);
-
-                // Smart Merge Logic
                 let other = Recon.data.out.find(x => x.uid !== uid && x.g === nG && Utils.normInv(x.i, true) === Utils.normInv(nI, true));
-                
                 if (other) {
                     r.ptx = nPtx === 0 ? other.ptx : nPtx;
                     r.gtx = nGtx === 0 ? other.gtx : nGtx;
                     r.pt = nPt === 0 ? other.pt : nPt;
                     r.gt = nGt === 0 ? other.gt : nGt;
-                    Recon.data.out = Recon.data.out.filter(x => x.uid !== other.uid); // Delete orphan
+                    Recon.data.out = Recon.data.out.filter(x => x.uid !== other.uid); 
                 } else {
                     r.ptx = nPtx; r.gtx = nGtx; r.pt = nPt; r.gt = nGt;
                 }
-
                 r.g = nG; r.i = nI; r.p = nP || r.p;
                 r.dtx = r.ptx - r.gtx; r.dt = r.pt - r.gt;
-                
-                // Recalculate Status
+                r.issues =[];
+                r.gi = r.i; r.gd = r.d;
                 if (Math.abs(r.dtx) <= tol && Math.abs(r.dt) <= tol && r.pt > 0 && r.gt > 0) { r.st = 'MATCHED'; } 
                 else if (r.pt > 0 && r.gt === 0) { r.st = 'MISSING_IN_2B'; } 
                 else if (r.pt === 0 && r.gt > 0) { r.st = 'MISSING_IN_PR'; } 
                 else { r.st = 'MISMATCH'; }
-
                 document.getElementById('editModal').classList.add('hidden');
                 Recon.recalcDashAndVendor(); Recon.renderTable(); Recon.rVen();
             },
-
-            // --- ADVANCED EXPORT ---
             exportExcel: () => {
                 let wb = XLSX.utils.book_new();
-                let aoa = [
-                    ["Marked", "Status", "GSTIN", "Party Name", "Invoice No.", "Date", "TALLY DATA", "", "", "", "GST PORTAL DATA", "", "", "", "DIFFERENCES", "", "", ""],
-                    ["", "", "", "", "", "", "Taxable", "CGST", "SGST", "IGST", "Taxable", "CGST", "SGST", "IGST", "Taxable", "CGST", "SGST", "IGST"]
+                let aoa = [["Marked", "Status", "GSTIN", "Party Name", "Invoice No.", "Date", "TALLY DATA", "", "", "", "GST PORTAL DATA", "", "", "", "DIFFERENCES", "", "", ""],["", "", "", "", "", "", "Taxable", "CGST", "SGST", "IGST", "Taxable", "CGST", "SGST", "IGST", "Taxable", "CGST", "SGST", "IGST"]
                 ];
-
                 Recon.data.out.forEach(x => {
-                    let stText = x.st === 'MISSING_IN_PR' ? 'Missing in Books' : (x.st === 'MISSING_IN_2B' ? 'Missing in 2B' : (x.st === 'MATCHED' ? 'Matched' : 'Mismatch'));
+                    let stText = x.st === 'MISSING_IN_PR' ? 'Missing in Books' : (x.st === 'MISSING_IN_2B' ? 'Missing in 2B' : (x.st === 'AUTO_CORRECTED' ? 'Auto-Corrected' : (x.st === 'MATCHED' ? 'Matched' : 'Mismatch')));
                     aoa.push([ x.marked ? 'YES' : '', stText, x.g, x.p, x.i, x.d, x.ptx, x.pcg, x.psg, x.pig, x.gtx, x.gcg, x.gsg, x.gig, x.dtx, x.dcg, x.dsg, x.dig ]);
                 });
-
                 let ws = XLSX.utils.aoa_to_sheet(aoa);
-                ws['!merges'] = [
+                ws['!merges'] =[
                     { s: { r: 0, c: 0 }, e: { r: 1, c: 0 } }, { s: { r: 0, c: 1 }, e: { r: 1, c: 1 } }, { s: { r: 0, c: 2 }, e: { r: 1, c: 2 } }, 
                     { s: { r: 0, c: 3 }, e: { r: 1, c: 3 } }, { s: { r: 0, c: 4 }, e: { r: 1, c: 4 } }, { s: { r: 0, c: 5 }, e: { r: 1, c: 5 } }, 
                     { s: { r: 0, c: 6 }, e: { r: 0, c: 9 } }, { s: { r: 0, c: 10 }, e: { r: 0, c: 13 } }, { s: { r: 0, c: 14 }, e: { r: 0, c: 17 } }
                 ];
-
                 let f2 = Recon.data.ven.map(v => ({"Supplier GSTIN":v.g, "Party Name":v.p, "Total Inv":v.tc, "Matched":v.mc, "Missing in 2B":v.mr, "ITC At Risk (Not Filed)":v.ls}));
                 XLSX.utils.book_append_sheet(wb, ws, "Recon Details"); XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(f2), "Vendor Risk Summary");
                 XLSX.writeFile(wb, "Pro_GST_Recon_Report.xlsx");
